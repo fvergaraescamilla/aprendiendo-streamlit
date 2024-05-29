@@ -2,39 +2,36 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
 
-"""
-# Welcome to Streamlit!
+# Cargar datos
+data = pd.read_csv('file.csv')
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+# Título de la aplicación
+st.title('Explorador de Películas')
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+# Selección de género
+genre = st.sidebar.selectbox('Seleccione el género', data['Genre'].unique())
+filtered_data_by_genre = data[data['Genre'].str.contains(genre)]
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+# Mostrar datos filtrados por género
+st.write(f"Datos filtrados por género: {genre}")
+st.dataframe(filtered_data_by_genre)
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+# Gráfico de ingresos de las películas seleccionadas
+st.write(f"Ingresos de películas de género {genre}")
+fig, ax = plt.subplots()
+ax.bar(filtered_data_by_genre['Title'], filtered_data_by_genre['Revenue (Millions)'])
+plt.xticks(rotation=90)
+plt.ylabel('Ingresos (Millones)')
+st.pyplot(fig)
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+# Filtro de año
+year_range = st.sidebar.slider("Seleccione el rango de años", int(data['Year'].min()), int(data['Year'].max()), (2010, 2020))
+filtered_data_by_year = data[(data['Year'] >= year_range[0]) & (data['Year'] <= year_range[1])]
+st.write(f"Datos filtrados por año: {year_range}")
+st.dataframe(filtered_data_by_year)
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+# Ejecutar esta aplicación guardando el código en un archivo, por ejemplo, `app.py` y ejecutando `streamlit run app.py`.
