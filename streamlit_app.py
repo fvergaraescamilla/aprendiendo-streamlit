@@ -1,28 +1,28 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
+from openai import OpenAI
 
-# Cargar datos
-data = pd.read_csv('IMDB-Movie-Data.csv')
+st.title("ChatGPT-like clone")
 
-# Título de la aplicación
-st.title('Explorador de Películas')
+# Set OpenAI API key from Streamlit secrets
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Selección de género
-genre = st.sidebar.selectbox('Seleccione el género', data['Genre'].unique())
-filtered_data_by_genre = data[data['Genre'].str.contains(genre)]
+# Set a default model
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
 
-# Mostrar datos filtrados por género
-st.write(f"Datos filtrados por género: {genre}")
-st.dataframe(filtered_data_by_genre)
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Gráfico de ingresos de las películas seleccionadas con Plotly
-st.write(f"Ingresos de películas de género {genre}")
-fig = px.bar(filtered_data_by_genre, x='Title', y='Revenue (Millions)', title="Ingresos por Película")
-st.plotly_chart(fig)
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Filtro de año
-year_range = st.sidebar.slider("Seleccione el rango de años", int(data['Year'].min()), int(data['Year'].max()), (2010, 2020))
-filtered_data_by_year = data[(data['Year'] >= year_range[0]) & (data['Year'] <= year_range[1])]
-st.write(f"Datos filtrados por año: {year_range}")
-st.dataframe(filtered_data_by_year)
+# Accept user input
+if prompt := st.chat_input("What is up?"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
