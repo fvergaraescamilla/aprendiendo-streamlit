@@ -1,13 +1,9 @@
-import altair as alt
-import numpy as np
-import pandas as pd
-import streamlit as st
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Cargar datos
-data = pd.read_csv('file.csv')
+data = pd.read_csv('IMDB-Movie-Data.csv')
 
 # Título de la aplicación
 st.title('Explorador de Películas')
@@ -35,3 +31,6 @@ st.write(f"Datos filtrados por año: {year_range}")
 st.dataframe(filtered_data_by_year)
 
 # Ejecutar esta aplicación guardando el código en un archivo, por ejemplo, `app.py` y ejecutando `streamlit run app.py`.
+
+Este código debe guardarse en un archivo .py y puede ser ejecutado con Streamlit mediante el comando streamlit run [nombre_del_archivo].py. Asegúrate de tener instaladas las librerías necesarias como pandas, streamlit y matplotlib. ¿Te gustaría añadir o modificar alguna funcionalidad específica?
+
