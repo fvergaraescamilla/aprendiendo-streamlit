@@ -32,5 +32,4 @@ st.dataframe(filtered_data_by_year)
 
 # Ejecutar esta aplicación guardando el código en un archivo, por ejemplo, `app.py` y ejecutando `streamlit run app.py`.
 
-Este código debe guardarse en un archivo .py y puede ser ejecutado con Streamlit mediante el comando streamlit run [nombre_del_archivo].py. Asegúrate de tener instaladas las librerías necesarias como pandas, streamlit y matplotlib. ¿Te gustaría añadir o modificar alguna funcionalidad específica?
 
